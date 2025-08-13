@@ -5,12 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.xml.bind.DatatypeConverter;
 import org.example.adapter.in.dto.CardData;
 import org.example.application.port.in.TokenUseCase;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Date;
 
@@ -20,10 +23,8 @@ public class TokenService implements TokenUseCase {
     @Value("${env.token.expiry}")
     private String TOKEN_EXPIRY_DURATION;
 
-    // TODO Using a secure key for signing the JWT. In a real application, this should be stored securely,
-    //  not only for security but also to ensure that it is not hard-coded, but also to ensure on a cloud application
-    //  remains the same on different instances.
-    private static final Key TOKEN_ENCRYPTION_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    @Value("${env.token.key}")
+    private String TOKEN_ENCRYPTION_KEY;
 
     public String tokenize(CardData cardData) throws JsonProcessingException {
         Date now = new Date();
@@ -35,17 +36,22 @@ public class TokenService implements TokenUseCase {
                 .setSubject(json)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(TOKEN_ENCRYPTION_KEY)
+                .signWith(getTokenEncryptionKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public CardData detokenize(String token) throws JsonProcessingException {
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(TOKEN_ENCRYPTION_KEY)
+                .setSigningKey(getTokenEncryptionKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
 
         return new ObjectMapper().readValue(claims.getSubject(), CardData.class);
+    }
+
+    private Key getTokenEncryptionKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(TOKEN_ENCRYPTION_KEY);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }
