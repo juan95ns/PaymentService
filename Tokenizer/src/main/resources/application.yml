@@ -1,0 +1,12 @@
+app:
+  name: Tokenizer
+  version: 1.0.0
+
+logging:
+  level:
+    root: INFO
+
+env:
+  token:
+    expiry: 600000 # 10 minutes in milliseconds
+    key: ${TOKEN_KEY}
