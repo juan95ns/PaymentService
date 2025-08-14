@@ -4,7 +4,6 @@ import org.example.adapter.in.api.TokenApi;
 import org.example.adapter.in.dto.CardData;
 import org.example.adapter.in.dto.Token;
 import org.example.adapter.in.exception.BadRequestException;
-import org.example.adapter.in.exception.GeneralException;
 import org.example.application.port.in.TokenUseCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,14 +34,9 @@ public class TokenController implements TokenApi {
         }
 
         logger.debug("Creating token from card data");
-        try {
-            Token token = new Token(tokenUseCase.tokenize(cardData));
-            return ResponseEntity.ok(token);
-        } catch (Exception e) {
-            logger.error("Error creating token from card data", e);
-            throw new GeneralException(e.getMessage());
-        }
 
+        Token token = new Token(tokenUseCase.tokenize(cardData));
+        return ResponseEntity.ok(token);
     }
 
     @Override
@@ -53,13 +47,10 @@ public class TokenController implements TokenApi {
         }
 
         logger.debug("Creating card data from token");
-        try {
-            CardData cardData = tokenUseCase.detokenize(token.value());
-            return ResponseEntity.ok(cardData);
-        } catch (Exception e) {
-            logger.error("Error creating token from card data", e);
-            throw new GeneralException(e.getMessage());
-        }
+
+        CardData cardData = tokenUseCase.detokenize(token.value());
+        return ResponseEntity.ok(cardData);
+
     }
 
     private boolean validateInput(CardData cardData) {
@@ -68,19 +59,21 @@ public class TokenController implements TokenApi {
             return false;
         }
 
-        if (cardData.cardHolderName().isEmpty() || cardData.cardHolderName().length() < 5) {
+        if (cardData.cardHolderName() == null || cardData.cardHolderName().isEmpty() || cardData.cardHolderName().length() < 5) {
             return false;
         }
 
-        if (cardData.cvv().isEmpty() || !cardData.cvv().matches("\\d{3,4}")) {
+        if (cardData.cvv() == null || cardData.cvv().isEmpty() || !cardData.cvv().matches("\\d{3,4}")) {
             return false;
         }
 
-        if (cardData.pan().isEmpty() || !cardData.pan().matches("\\d{13,19}")) {
+        if (cardData.pan() == null || cardData.pan().isEmpty() || !cardData.pan().matches("\\d{13,19}")) {
             return false;
         }
 
-        return !cardData.expirationDate().isEmpty() && cardData.expirationDate().matches("(0[1-9]|1[0-2])/[0-9]{2}") && checkExpirationDate(cardData.expirationDate());
+        return cardData.expirationDate() != null && !cardData.expirationDate().isEmpty()
+                && cardData.expirationDate().matches("(0[1-9]|1[0-2])/[0-9]{2}")
+                && checkExpirationDate(cardData.expirationDate());
     }
 
     private boolean checkExpirationDate(String expirationDate) {
