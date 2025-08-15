@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+//TODO add Swagger annotations for better API documentation
 /**
  * TokenApi defines the endpoints for tokenization and resolution of card data.
  * It provides methods to create a token from card data and resolve a token to retrieve the original card data.

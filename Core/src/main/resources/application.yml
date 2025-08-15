@@ -1,0 +1,18 @@
+app:
+  name: Core
+  version: 1.0.0
+
+logging:
+  level:
+    root: INFO
+
+env:
+
+server:
+  port: 8082
+
+spring:
+  security:
+    user:
+      name: ${USER_NAME}
+      password: ${PASSWORD}
