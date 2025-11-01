@@ -18,11 +18,19 @@ PCI DSS compliant environment along with all the communications coming from and 
 the rest of the microservices that interact with PaymentService can be PCI DSS compliant without having to be in a 
 PCI DSS ready environment.
 
+For example, if you have an e-commerce application that needs to process payments, you can have your application with 
+all the microservices that you need (like order management, inventory, user management, etc.) in a regular environment. 
+When it comes to processing payments, your application can communicate with the Tokenizer microservice in the PCI DSS 
+compliant environment to tokenize payment information. This way, your application can remain PCI DSS compliant without 
+having to handle sensitive payment data directly. And then PaymentService Core can handle the rest of the payment 
+processing in a secure manner.
+
+#### Security requirements:
 ***Needs to be deployed in a PCI DSS compliant environment.***
 
 ### CORE
 //TODO
-#### Requirements:
+#### Security requirements:
 - Needs to be deployed in a PCI DSS compliant environment.
 
 ### Offline

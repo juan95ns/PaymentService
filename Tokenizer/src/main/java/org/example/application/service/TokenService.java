@@ -2,6 +2,7 @@ package org.example.application.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -42,15 +43,20 @@ public class TokenService implements TokenUseCase {
                 .setExpiration(expiryDate)
                 .signWith(getTokenEncryptionKey(), SignatureAlgorithm.HS256)
                 .compact();
-
     }
 
     public CardData detokenize(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getTokenEncryptionKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        Claims claims;
+
+        try {
+            claims = Jwts.parserBuilder()
+                    .setSigningKey(getTokenEncryptionKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            throw new GeneralException("Error creating token from card data: Token has expired");
+        }
 
         try {
             return new ObjectMapper().readValue(claims.getSubject(), CardData.class);
