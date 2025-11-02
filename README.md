@@ -8,7 +8,8 @@ It is designed to handle various payment methods and integrate with different pa
 ***This is made for educational purposes and is not intended for production use.***
 
 ## Architecture
-//TODO
+ToDo
+
 ![Architecture](docs/architecture.png)
 
 ## Microservices
@@ -26,18 +27,18 @@ having to handle sensitive payment data directly. And then PaymentService Core c
 processing in a secure manner.
 
 #### Security requirements:
-***Needs to be deployed in a PCI DSS compliant environment.***
+*Needs to be deployed in a PCI DSS compliant environment.*
 
 ### CORE
-//TODO
+ToDo
 #### Security requirements:
-- Needs to be deployed in a PCI DSS compliant environment.
+*Needs to be deployed in a PCI DSS compliant environment.*
 
 ### Offline
-//TODO
+ToDo
 
 ### Notification
-//TODO
+ToDo
 
 
 ## License

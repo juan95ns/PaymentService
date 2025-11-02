@@ -5,6 +5,8 @@ package org.example.application.service.flow.createpayment;
 //  methods or properties. Probably the correct choice is abstract class to allow future shared code, but for this
 //  project with only one implementation interface would be enough.
 
+import org.example.model.Payment;
+
 public abstract class CreatePaymentService {
-    public abstract void create();
+    public abstract void create(Payment payment);
 }

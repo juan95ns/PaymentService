@@ -1,12 +1,19 @@
 package org.example.model;
 
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.money.CurrencyUnit;
 import java.util.List;
 
 /**
  * Represents a payment transaction. More details can be added as needed.
  */
+@Getter
+@Setter
+@Builder
 public class Payment {
 
     private Id id;
